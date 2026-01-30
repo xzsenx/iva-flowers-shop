@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iva Flowers - Магазин букетов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .city-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .city-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .menu-icon {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Marquee Banner */
+        .marquee-container {
+            background: #FFE4F0;
+            padding: 10px 0;
+            overflow: hidden;
+        }
+
+        .marquee {
+            display: flex;
+            animation: scroll 20s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #FF1493;
+            padding: 0 50px;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Filters */
+        .filters-section {
+            padding: 20px;
+            background: white;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #FF69B4;
+            color: white;
+            border-color: #FF69B4;
+        }
+
+        .filter-btn:hover {
+            border-color: #FF69B4;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            padding: 0 20px 100px 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delivery-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #FF69B4;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .delivery-badge.tomorrow {
+            background: #87CEEB;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .image-nav.prev {
+            left: 10px;
+        }
+
+        .image-nav.next {
+            right: 10px;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FF1493;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .qty-number {
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            flex: 1;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+        }
+
+        .nav-item.active {
+            color: #FF1493;
+        }
+
+        /* Cart Badge */
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF1493;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .bot-username {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">Iva Flowers</div>
+        <div class="city-selector">
+            <span class="city-icon">📍</span>
+            <span>Город</span>
+            <div style="font-size: 14px;">Москва</div>
+        </div>
+        <button class="menu-icon">⋮</button>
+    </div>
+
+    <!-- Marquee Banner -->
+    <div class="marquee-container">
+        <div class="marquee">
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="filter-row">
+            <button class="filter-btn active">Все</button>
+            <button class="filter-btn">Экзотика</button>
+            <button class="filter-btn">Сети</button>
+            <button class="filter-btn">Ветки</button>
+            <button class="filter-btn">Ранункулюсы</button>
+            <button class="filter-btn">Зелень</button>
+            <button class="filter-btn">Гвоздики</button>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn">Белые</button>
+            <button class="filter-btn">Красные</button>
+            <button class="filter-btn">Желтые</button>
+            <button class="filter-btn">Фиолетовые</button>
+            <button class="filter-btn">Розовые</button>
+            <button class="filter-btn">Коричневые</button>
+            <button class="filter-btn">Синие</button>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn">Сети</button>
+            <button class="filter-btn">Высокие</button>
+            <button class="filter-btn">Ароматные</button>
+            <button class="filter-btn">Стойкие</button>
+            <button class="filter-btn">Пионовидные</button>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid">
+        <!-- Product 1 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=400&fit=crop" alt="Луковица Амариллиса" class="product-image">
+                <div class="delivery-badge">Доставим сегодня</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Луковица Амариллиса</div>
+                <div class="product-footer">
+                    <div class="product-price">2500 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=400&fit=crop" alt="Красная охапка" class="product-image">
+                <div class="delivery-badge tomorrow">Доставим завтра</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Красная охапка</div>
+                <div class="product-footer">
+                    <div class="product-price">8100 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=400&fit=crop" alt="Букет из веток" class="product-image">
+                <div class="delivery-badge">Доставим сегодня</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">*5 веток</div>
+                <div class="product-footer">
+                    <div class="product-price">3200 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400&h=400&fit=crop" alt="Розовый микс" class="product-image">
+                <div class="delivery-badge">Доставим сегодня</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Розовый микс</div>
+                <div class="product-footer">
+                    <div class="product-price">5400 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 5 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1487070183336-b863922373d4?w=400&h=400&fit=crop" alt="Белые розы" class="product-image">
+                <div class="delivery-badge tomorrow">Доставим завтра</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Белые розы</div>
+                <div class="product-footer">
+                    <div class="product-price">6700 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="https://images.unsplash.com/photo-1496062031456-07b8f162a322?w=400&h=400&fit=crop" alt="Тюльпаны" class="product-image">
+                <div class="delivery-badge">Доставим сегодня</div>
+                <button class="favorite-btn">🛒</button>
+                <button class="image-nav prev">‹</button>
+                <button class="image-nav next">›</button>
+            </div>
+            <div class="product-info">
+                <div class="product-name">Тюльпаны</div>
+                <div class="product-footer">
+                    <div class="product-price">4200 ₽</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-number">1</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bot Username -->
+    <div class="bot-username">Iva Flowers</div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <div class="nav-icon">☰</div>
+            <div class="nav-label">Меню</div>
+        </a>
+        <a href="#" class="nav-item" style="position: relative;">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Корзина</div>
+            <span class="cart-badge">3</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Профиль</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">ℹ️</div>
+            <div class="nav-label">О проекте</div>
+        </a>
+    </div>
+
+    <script>
+        // Filter buttons functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons in the same row
+                const row = this.closest('.filter-row');
+                row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+            });
+        });
+
+        // Quantity controls
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const controls = this.closest('.quantity-controls');
+                const qtyElement = controls.querySelector('.qty-number');
+                let qty = parseInt(qtyElement.textContent);
+                
+                if (this.textContent === '+') {
+                    qty++;
+                } else if (this.textContent === '−' && qty > 1) {
+                    qty--;
+                }
+                
+                qtyElement.textContent = qty;
+            });
+        });
+
+        // Image navigation (placeholder - would need actual image arrays)
+        document.querySelectorAll('.image-nav').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Image navigation:', this.classList.contains('prev') ? 'Previous' : 'Next');
+            });
+        });
+
+        // Favorite/Cart button
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Added to cart');
+                // Update cart badge
+                const badge = document.querySelector('.cart-badge');
+                let count = parseInt(badge.textContent);
+                badge.textContent = count + 1;
+            });
+        });
+
+        // Bottom nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
