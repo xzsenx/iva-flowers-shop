@@ -575,52 +575,268 @@
     </div>
 
     <script>
+        const API_URL = '/api';
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let allProducts = [];
+        let activeFilters = {
+            category: 'Все',
+            color: null,
+            characteristic: null
+        };
+
+        // Load products from API
+        async function loadProducts() {
+            try {
+                const params = new URLSearchParams();
+                if (activeFilters.category !== 'Все') params.append('category', activeFilters.category);
+                if (activeFilters.color) params.append('color', activeFilters.color);
+                if (activeFilters.characteristic) params.append('characteristic', activeFilters.characteristic);
+                
+                const response = await fetch(`${API_URL}/products?${params}`);
+                allProducts = await response.json();
+                renderProducts();
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Render products
+        function renderProducts() {
+            const container = document.querySelector('.products-grid');
+            if (allProducts.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">Товары не найдены</p>';
+                return;
+            }
+            
+            container.innerHTML = allProducts.map(product => `
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="${product.image_url}" alt="${product.name}" class="product-image">
+                        <div class="delivery-badge ${product.delivery_type === 'tomorrow' ? 'tomorrow' : ''}">${product.delivery_type === 'today' ? 'Доставим сегодня' : 'Доставим завтра'}</div>
+                        <button class="favorite-btn" onclick="addToCart(${product.id})">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-footer">
+                            <div class="product-price">${product.price} ₽</div>
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity(${product.id}, -1)">−</button>
+                                <span class="qty-number" id="qty-${product.id}">1</span>
+                                <button class="qty-btn" onclick="updateQuantity(${product.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update quantity in product card
+        function updateQuantity(productId, change) {
+            const qtyElement = document.getElementById(`qty-${productId}`);
+            let qty = parseInt(qtyElement.textContent);
+            qty = Math.max(1, qty + change);
+            qtyElement.textContent = qty;
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            const qtyElement = document.getElementById(`qty-${productId}`);
+            const quantity = parseInt(qtyElement.textContent);
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image_url: product.image_url,
+                    quantity: quantity
+                });
+            }
+            
+            saveCart();
+            updateCartBadge();
+            alert(`${product.name} добавлен в корзину!`);
+        }
+
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Update cart badge
+        function updateCartBadge() {
+            const badge = document.querySelector('.cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+        }
+
         // Filter buttons functionality
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const row = this.closest('.filter-row');
+                const rowIndex = Array.from(row.parentElement.children).indexOf(row);
+                
                 row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-            });
-        });
-
-        // Quantity controls
-        document.querySelectorAll('.qty-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const controls = this.closest('.quantity-controls');
-                const qtyElement = controls.querySelector('.qty-number');
-                let qty = parseInt(qtyElement.textContent);
                 
-                if (this.textContent === '+') {
-                    qty++;
-                } else if (this.textContent === '−' && qty > 1) {
-                    qty--;
+                const filterText = this.textContent;
+                
+                // First row: categories
+                if (rowIndex === 0) {
+                    activeFilters.category = filterText;
+                }
+                // Second row: colors
+                else if (rowIndex === 1) {
+                    activeFilters.color = filterText === 'Все' ? null : filterText;
+                }
+                // Third row: characteristics
+                else if (rowIndex === 2) {
+                    activeFilters.characteristic = filterText === 'Все' ? null : filterText;
                 }
                 
-                qtyElement.textContent = qty;
+                loadProducts();
             });
         });
 
-        // Favorite/Cart button
-        document.querySelectorAll('.favorite-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+        // Cart navigation
+        document.querySelector('.nav-item[href="#"]').addEventListener('click', function(e) {
+            if (this.querySelector('.nav-label').textContent === 'Корзина') {
                 e.preventDefault();
-                const badge = document.querySelector('.cart-badge');
-                let count = parseInt(badge.textContent);
-                badge.textContent = count + 1;
-            });
+                showCart();
+            }
         });
+
+        // Show cart modal
+        function showCart() {
+            if (cart.length === 0) {
+                alert('Корзина пуста');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const cartHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
+                    <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto;" onclick="event.stopPropagation()">
+                        <h2 style="color: #4a5c5e; margin-bottom: 20px;">Корзина</h2>
+                        ${cart.map(item => `
+                            <div style="display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e0e0e0;">
+                                <img src="${item.image_url}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">${item.name}</div>
+                                    <div style="color: #c4a57b; font-weight: 700;">${item.price} ₽ x ${item.quantity}</div>
+                                </div>
+                                <button onclick="removeFromCart(${item.id})" style="background: #d9534f; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Удалить</button>
+                            </div>
+                        `).join('')}
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #4a5c5e;">
+                            <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; margin-bottom: 20px;">
+                                <span>Итого:</span>
+                                <span style="color: #c4a57b;">${total} ₽</span>
+                            </div>
+                            <button onclick="checkout()" style="width: 100%; background: #c4a57b; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">Оформить заказ</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', cartHTML);
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            updateCartBadge();
+            document.querySelector('[style*="position: fixed"]')?.remove();
+            if (cart.length > 0) {
+                showCart();
+            }
+        }
+
+        // Checkout
+        function checkout() {
+            document.querySelector('[style*="position: fixed"]')?.remove();
+            
+            const checkoutHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
+                    <div style="background: white; border-radius: 15px; padding: 30px; max-width: 400px; width: 100%;" onclick="event.stopPropagation()">
+                        <h2 style="color: #4a5c5e; margin-bottom: 20px;">Оформление заказа</h2>
+                        <form id="checkout-form" style="display: flex; flex-direction: column; gap: 15px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Имя</label>
+                                <input type="text" name="name" required style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Телефон</label>
+                                <input type="tel" name="phone" required style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Адрес доставки</label>
+                                <textarea name="address" required style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; min-height: 80px; font-family: inherit;"></textarea>
+                            </div>
+                            <button type="submit" style="background: #c4a57b; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">Подтвердить заказ</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', checkoutHTML);
+            
+            document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                
+                const orderData = {
+                    customer_name: formData.get('name'),
+                    customer_phone: formData.get('phone'),
+                    customer_address: formData.get('address'),
+                    items: cart,
+                    total_price: total
+                };
+                
+                try {
+                    const response = await fetch(`${API_URL}/orders`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                    });
+                    
+                    if (response.ok) {
+                        alert('Заказ оформлен! Мы свяжемся с вами в ближайшее время.');
+                        cart = [];
+                        saveCart();
+                        updateCartBadge();
+                        document.querySelector('[style*="position: fixed"]').remove();
+                    }
+                } catch (error) {
+                    alert('Ошибка при оформлении заказа. Попробуйте позже.');
+                }
+            });
+        }
 
         // Bottom nav items
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
+                if (this.querySelector('.nav-label').textContent !== 'Корзина') {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                }
             });
         });
+
+        // Initial load
+        loadProducts();
+        updateCartBadge();
     </script>
 </body>
 </html>
