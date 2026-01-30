@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iva Flowers - Магазин букетов</title>
+    <title>Ива - Цветочная студия</title>
     <style>
         * {
             margin: 0;
@@ -13,58 +13,64 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #fff;
+            background: #f5f5f5;
             overflow-x: hidden;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
-            padding: 15px 20px;
+            background: #4a5c5e;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: white;
-            letter-spacing: 1px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #e8dcc5;
+            letter-spacing: 3px;
         }
 
         .city-selector {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(232, 220, 197, 0.15);
             padding: 8px 15px;
             border-radius: 20px;
-            color: white;
+            color: #e8dcc5;
             font-size: 14px;
             cursor: pointer;
-        }
-
-        .city-icon {
-            width: 16px;
-            height: 16px;
         }
 
         .menu-icon {
             background: none;
             border: none;
-            color: white;
+            color: #e8dcc5;
             font-size: 24px;
             cursor: pointer;
         }
 
         /* Marquee Banner */
         .marquee-container {
-            background: #FFE4F0;
+            background: #e8dcc5;
             padding: 10px 0;
             overflow: hidden;
         }
@@ -78,7 +84,7 @@
         .marquee-text {
             font-size: 14px;
             font-weight: 600;
-            color: #FF1493;
+            color: #4a5c5e;
             padding: 0 50px;
         }
 
@@ -107,23 +113,24 @@
 
         .filter-btn {
             padding: 10px 20px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #c4a57b;
             border-radius: 25px;
-            background: white;
+            background: #f5ead8;
             font-size: 14px;
             white-space: nowrap;
             cursor: pointer;
             transition: all 0.3s;
+            color: #4a5c5e;
         }
 
         .filter-btn.active {
-            background: #FF69B4;
+            background: #c4a57b;
             color: white;
-            border-color: #FF69B4;
+            border-color: #c4a57b;
         }
 
         .filter-btn:hover {
-            border-color: #FF69B4;
+            border-color: #c4a57b;
         }
 
         /* Products Grid */
@@ -145,7 +152,7 @@
         .product-image-container {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 220px;
             background: #000;
             overflow: hidden;
         }
@@ -160,56 +167,39 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            background: #FF69B4;
+            background: #c4a57b;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
         .delivery-badge.tomorrow {
-            background: #87CEEB;
+            background: #7a9a9e;
+            color: white;
         }
 
         .favorite-btn {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 36px;
-            height: 36px;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .image-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .image-nav.prev {
-            left: 10px;
-        }
-
-        .image-nav.next {
-            right: 10px;
+        .favorite-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #4a5c5e;
         }
 
         .product-info {
@@ -232,7 +222,7 @@
         .product-price {
             font-size: 18px;
             font-weight: 700;
-            color: #FF1493;
+            color: #c4a57b;
         }
 
         .quantity-controls {
@@ -271,7 +261,7 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 10px 0 15px 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             z-index: 100;
         }
@@ -284,11 +274,19 @@
             cursor: pointer;
             flex: 1;
             text-decoration: none;
-            color: #666;
+            color: #999;
+            position: relative;
         }
 
         .nav-icon {
-            font-size: 24px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
         }
 
         .nav-label {
@@ -296,15 +294,15 @@
         }
 
         .nav-item.active {
-            color: #FF1493;
+            color: #c4a57b;
         }
 
         /* Cart Badge */
         .cart-badge {
             position: absolute;
             top: -5px;
-            right: -5px;
-            background: #FF1493;
+            right: 15px;
+            background: #c4a57b;
             color: white;
             width: 20px;
             height: 20px;
@@ -333,11 +331,15 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <div class="logo">Iva Flowers</div>
+        <div class="logo-container">
+            <img src="logo.png" alt="Ива" class="logo-image">
+            <div class="logo">ИВА</div>
+        </div>
         <div class="city-selector">
-            <span class="city-icon">📍</span>
-            <span>Город</span>
-            <div style="font-size: 14px;">Москва</div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <span>Москва</span>
         </div>
         <button class="menu-icon">⋮</button>
     </div>
@@ -345,9 +347,9 @@
     <!-- Marquee Banner -->
     <div class="marquee-container">
         <div class="marquee">
-            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
-            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
-            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - IVA FLOWERS ЦВЕТЫ ПО СЕБЕСТОИМОСТИ</span>
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - ИВА ЦВЕТОЧНАЯ СТУДИЯ</span>
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - ИВА ЦВЕТОЧНАЯ СТУДИЯ</span>
+            <span class="marquee-text">НОВИНКИ - ДОСТАВКА В ДЕНЬ ЗАКАЗА - ИВА ЦВЕТОЧНАЯ СТУДИЯ</span>
         </div>
     </div>
 
@@ -387,9 +389,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=400&fit=crop" alt="Луковица Амариллиса" class="product-image">
                 <div class="delivery-badge">Доставим сегодня</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">Луковица Амариллиса</div>
@@ -409,9 +413,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=400&fit=crop" alt="Красная охапка" class="product-image">
                 <div class="delivery-badge tomorrow">Доставим завтра</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">Красная охапка</div>
@@ -431,9 +437,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=400&fit=crop" alt="Букет из веток" class="product-image">
                 <div class="delivery-badge">Доставим сегодня</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">*5 веток</div>
@@ -453,9 +461,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400&h=400&fit=crop" alt="Розовый микс" class="product-image">
                 <div class="delivery-badge">Доставим сегодня</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">Розовый микс</div>
@@ -475,9 +485,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1487070183336-b863922373d4?w=400&h=400&fit=crop" alt="Белые розы" class="product-image">
                 <div class="delivery-badge tomorrow">Доставим завтра</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">Белые розы</div>
@@ -497,9 +509,11 @@
             <div class="product-image-container">
                 <img src="https://images.unsplash.com/photo-1496062031456-07b8f162a322?w=400&h=400&fit=crop" alt="Тюльпаны" class="product-image">
                 <div class="delivery-badge">Доставим сегодня</div>
-                <button class="favorite-btn">🛒</button>
-                <button class="image-nav prev">‹</button>
-                <button class="image-nav next">›</button>
+                <button class="favorite-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-name">Тюльпаны</div>
@@ -516,25 +530,41 @@
     </div>
 
     <!-- Bot Username -->
-    <div class="bot-username">Iva Flowers</div>
+    <div class="bot-username">Ива - Цветочная студия</div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <a href="#" class="nav-item active">
-            <div class="nav-icon">☰</div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </div>
             <div class="nav-label">Меню</div>
         </a>
         <a href="#" class="nav-item" style="position: relative;">
-            <div class="nav-icon">🛒</div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </div>
             <div class="nav-label">Корзина</div>
             <span class="cart-badge">3</span>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">👤</div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
             <div class="nav-label">Профиль</div>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">ℹ️</div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+            </div>
             <div class="nav-label">О проекте</div>
         </a>
     </div>
@@ -544,10 +574,8 @@
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Remove active class from all buttons in the same row
                 const row = this.closest('.filter-row');
                 row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
                 this.classList.add('active');
             });
         });
@@ -570,20 +598,10 @@
             });
         });
 
-        // Image navigation (placeholder - would need actual image arrays)
-        document.querySelectorAll('.image-nav').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('Image navigation:', this.classList.contains('prev') ? 'Previous' : 'Next');
-            });
-        });
-
         // Favorite/Cart button
         document.querySelectorAll('.favorite-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Added to cart');
-                // Update cart badge
                 const badge = document.querySelector('.cart-badge');
                 let count = parseInt(badge.textContent);
                 badge.textContent = count + 1;
